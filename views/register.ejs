@@ -1,0 +1,72 @@
+<%- include('partials/header'); %>
+
+<form id="form">
+    <h2>Sign up</h2>
+    <label for="email">Email</label>
+    <input type="email" placeholder="Email" name="email" id="name">
+    <div class="email error"></div>
+    <label for="password">Password</label>
+    <input type="password" placeholder="Password" name="password" id="password">
+    <div class="password error"></div>
+
+    <button type="submit">Sign up</button>
+    <li class="formlink"><a href="/login"><u>Log in</u></a></li>
+
+  </form>
+
+  <script>
+    const form = document.querySelector('#form')
+
+    form.addEventListener('submit', async(e)=>{
+        e.preventDefault();
+
+          // rest error 
+          passErr.textContent = ''
+          emailErr.textContent = ''
+
+          // error message
+          const passErr = document.querySelector('.password.error')   
+          const emailErr = document.querySelector('.email.error')   
+
+        //get  the value of input
+
+        const email = form.email.value
+        const password = form.password.value
+
+
+        //console.log({email:email}, {password:password})
+        try{
+             const res = await fetch('http://localhost:3000/signup', {
+                method: 'POST',
+                body: JSON.stringify({email, password}),
+                headers:{'Content-Type': 'application/json'}
+
+             })
+             const data = await res.json()
+             console.log(data)
+
+             // error display
+
+             if(data.Emsgerr){
+                emailErr.textContent = data.Emsgerr
+             }else if(data.Pmsgerr){
+              passErr.textContent = data.Pmsgerr
+             }
+
+             if(data.Rmsgsucc){
+
+              location.assign('/')
+             }
+
+            // form.email.value = ""
+            // form.password.value = ""
+        }
+        catch(err) {
+        console.log(err)
+        }
+    
+     
+    })
+  </script>
+
+<%- include('partials/footer'); %>
